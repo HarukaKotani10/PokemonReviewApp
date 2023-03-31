@@ -34,12 +34,12 @@ namespace PokemonReviewApp.Controllers
             [HttpGet("{countryId}")]
             [ProducesResponseType(200, Type = typeof(Country))]
             [ProducesResponseType(400)]
-            public IActionResult GetCountry(int id)
+            public IActionResult GetCountry(int countryId)
             {
-                if (!_countryRepository.CountryExists(id))
+                if (!_countryRepository.CountryExists(countryId))
                     return NotFound();
 
-                var country = _mapper.Map<CountryDto>(_countryRepository.GetCountry(id));
+                var country = _mapper.Map<CountryDto>(_countryRepository.GetCountry(countryId));
 
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
