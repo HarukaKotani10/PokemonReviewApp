@@ -9,12 +9,12 @@ namespace PokemonReviewApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewContrioller : Controller
+    public class ReviewController : Controller
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
 
-        public ReviewContrioller(IReviewRepository reviewRepository, IMapper mapper)
+        public ReviewController(IReviewRepository reviewRepository, IMapper mapper)
         {
             _reviewRepository = reviewRepository;
             _mapper = mapper;
