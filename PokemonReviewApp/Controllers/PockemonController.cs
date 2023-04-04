@@ -62,5 +62,14 @@ namespace PokemonReviewApp.Controllers
 
             return Ok(rating);
         }
+
+        [HttpPost()]
+        public bool CreatePockemon()
+        {
+            Pokemon newPokemon = new Pokemon();
+            _pokemonRepository.CreatePokemon(1, 1, newPokemon);
+
+            return _pokemonRepository.Save();
+        }
     }
 }
