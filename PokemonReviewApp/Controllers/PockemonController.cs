@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using PokemonReviewApp.Dto;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Models;
@@ -63,13 +64,39 @@ namespace PokemonReviewApp.Controllers
             return Ok(rating);
         }
 
-        [HttpPost()]
-        public bool CreatePockemon()
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreatePockemon([FromQuery] int ownerId, [FromQuery] int catId, [FromBody] PokemonDto pokemonCreate)
         {
-            Pokemon newPokemon = new Pokemon();
-            _pokemonRepository.CreatePokemon(1, 1, newPokemon);
+            if (pokemonCreate == null)
+                return BadRequest(ModelState);
+            var pokemons = _pokemonRepository.GetPokemons()
+                .Where(c => c.Name.Trim().ToUpper() == pokemonCreate.Name.TrimEnd().ToUpper())
+                .FirstOrDefault();
+            if (pokemons != null)
+            {
+                ModelState.AddModelError("", "Pokemon already exists");
+                return StateCode(422, ModelState);
+            }
 
-            return _pokemonRepository.Save();
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pokemonMap = _mapper.Map<Pokemon>(pokemonCreate);
+
+            if (!_pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap))
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StateCode(500, ModelState);
+            }
+
+            return Ok("Successfully created");
+        }
+
+        private IActionResult StateCode(int v, ModelStateDictionary modelState)
+        {
+            throw new NotImplementedException();
         }
     }
 }
