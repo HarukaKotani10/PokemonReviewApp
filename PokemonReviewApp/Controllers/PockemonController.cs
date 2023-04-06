@@ -77,7 +77,7 @@ namespace PokemonReviewApp.Controllers
             if (pokemons != null)
             {
                 ModelState.AddModelError("", "Pokemon already exists");
-                return StateCode(422, ModelState);
+                return StatusCode(422, ModelState);
             }
 
             if(!ModelState.IsValid)
@@ -88,15 +88,10 @@ namespace PokemonReviewApp.Controllers
             if (!_pokemonRepository.CreatePokemon(ownerId, catId, pokemonMap))
             {
                 ModelState.AddModelError("", "Something went wrong");
-                return StateCode(500, ModelState);
+                return StatusCode(500, ModelState);
             }
 
             return Ok("Successfully created");
-        }
-
-        private IActionResult StateCode(int v, ModelStateDictionary modelState)
-        {
-            throw new NotImplementedException();
         }
     }
 }
