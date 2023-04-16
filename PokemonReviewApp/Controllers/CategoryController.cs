@@ -36,12 +36,12 @@ namespace PokemonReviewApp.Controllers
         [HttpGet("{categoryId}")]
         [ProducesResponseType(200, Type = typeof(Category))]
         [ProducesResponseType(400)]
-        public IActionResult GetCategory(int id)
+        public IActionResult GetCategory(int categoryId)
         {
-            if (!_categoryRepository.CategoryExists(id))
+            if (!_categoryRepository.CategoryExists(categoryId))
                 return NotFound();
 
-            var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategory(id));
+            var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategory(categoryId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -52,13 +52,13 @@ namespace PokemonReviewApp.Controllers
         [HttpGet("pokemon/{categoryId}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         [ProducesResponseType(400)]
-        public IActionResult GetPokemonByCategoryId(int id)
+        public IActionResult GetPokemonByCategoryId(int categoryId)
         {
-            if (!_categoryRepository.CategoryExists(id))
+            if (!_categoryRepository.CategoryExists(categoryId))
                 return NotFound();
 
             var pokemons = _mapper.Map<List<PokemonDto>>(
-                _categoryRepository.GetPokemonByCategory(id));
+                _categoryRepository.GetPokemonByCategory(categoryId));
 
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -123,6 +123,30 @@ namespace PokemonReviewApp.Controllers
             }
 
             return Ok("Successfully update");
+        }
+
+        [HttpDelete("{categoryId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteCategory(int categoryId)
+        {
+            if (!_categoryRepository.CategoryExists(categoryId))
+            {
+                return NotFound();
+            }
+
+            var categoryToDelete = _categoryRepository.GetCategory(categoryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_categoryRepository.DeleteCategory(categoryToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting category");
+            }
+
+            return NoContent();
         }
     }
 }
