@@ -20,7 +20,7 @@ namespace PokemonReviewApp.Repository
         { 
             _context.Add(reviewer);
             return Save();
-    }
+        }
 
         public Reviewer GetReviewer(int reviewerId)
         {
