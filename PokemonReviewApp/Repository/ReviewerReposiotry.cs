@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
@@ -19,6 +20,12 @@ namespace PokemonReviewApp.Repository
         public bool CreateReviewer(Reviewer reviewer) 
         { 
             _context.Add(reviewer);
+            return Save();
+        }
+
+        public bool DeleteReviewer(Reviewer reviewer)
+        {
+            _context.Remove(reviewer);
             return Save();
         }
 
