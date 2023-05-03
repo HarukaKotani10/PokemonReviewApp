@@ -137,16 +137,10 @@ namespace PokemonReviewApp.Controllers
                 return NotFound();
             }
 
-           // var reviewsToDelete = _reviewerRepository.GetReviewsByReviewer(reviewerId);
             var reviewerToDelete = _reviewerRepository.GetReviewer(reviewerId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-/*            if (_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
-            {
-                ModelState.AddModelError("", "Something went wrong when deleting reviews");
-            }*/
 
             if (!_reviewerRepository.DeleteReviewer(reviewerToDelete))
             {
